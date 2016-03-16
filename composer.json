@@ -1,0 +1,7 @@
+{
+  "name": "OnkelTem/folded-combine",
+  "version": "dev-master",
+  "autoload": {
+    "files": ["index.inc"]
+  }
+}
