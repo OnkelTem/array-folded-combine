@@ -1,5 +1,5 @@
 {
-  "name": "OnkelTem/array-folded-combine",
+  "name": "adyax/array-folded-combine",
   "version": "dev-master",
   "autoload": {
     "files": ["index.inc"]
