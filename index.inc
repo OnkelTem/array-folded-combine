@@ -35,7 +35,7 @@ function array_folded_combine($x, $y) {
     // [N] × SCALAR = { [N]: SCALAR }
     throw new Exception('Error combining arrays: [N] × SCALAR: complex keys are not supported by PHP arrays.');
   }
-  else if (is_array($x) && is_array($y) && count($x) == 1 && count($y) > 1) {
+  else if (is_array($x) && is_array($y) && count($x) == 1) {
     // [1] × [N] = [ 1 × N:1, 1 × N:2, ... , 1 × N:N ]
     $result = [];
     foreach($y as $y_item) {
