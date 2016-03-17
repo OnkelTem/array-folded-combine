@@ -7,17 +7,33 @@
    */
 
 function array_folded_combine($x, $y) {
+  // Check if array is a hash with one element: special case
+  $key = NULL;
+  if (is_array($x) && count($x) == 1 && array_keys($x) !== range(0, count($x) - 1)) {
+    $key = array_keys($x)[0];
+    $x = array_values($x)[0];
+  }
   if (!is_array($x) && !is_array($y)) {
     // SCALAR × SCALAR = { SCALAR: SCALAR }
-    return [$x => $y];
+    if ($key) {
+      return [$key => [$x => $y]];
+    }
+    else {
+      return [$x => $y];
+    }
   }
   else if (!is_array($x) && is_array($y)) {
     // SCALAR × [N] = { SCALAR: [N] }
-    return [$x => $y];
+    if ($key) {
+      return [$key => [$x => $y]];
+    }
+    else {
+      return [$x => $y];
+    }
   }
-  else if (!is_array($x) && is_array($y)) {
+  else if (is_array($x) && !is_array($y)) {
     // [N] × SCALAR = { [N]: SCALAR }
-    throw new Exception('Error multiplying arrays: complex keys are not supported by PHP arrays.');
+    throw new Exception('Error combining arrays: [N] × SCALAR: complex keys are not supported by PHP arrays.');
   }
   else if (is_array($x) && is_array($y) && count($x) == 1 && count($y) > 1) {
     // [1] × [N] = [ 1 × N:1, 1 × N:2, ... , 1 × N:N ]
@@ -25,15 +41,16 @@ function array_folded_combine($x, $y) {
     foreach($y as $y_item) {
       $result[] = array_folded_combine($x[0], $y_item);
     }
-    return $result;
+    if ($key) {
+      return [ $key => $result];
+    }
+    else {
+      return $result;
+    }
   }
   else if (is_array($x) && is_array($y) && count($y) == 1 && count($x) > 1) {
     // [N] × [1] = [ N:1 × 1, N:2 × 1, ... , N:N × 1 ]
-    $result = [];
-    foreach($x as $x_item) {
-      $result[] = array_folded_combine($x_item, $y[0]);
-    }
-    return $result;
+    throw new Exception('Error combining arrays: [N] × [1]: is not supported.');
   }
   else if (is_array($x) && is_array($y) && count($x) == count($y)) {
     // [N] × [N] = { N:1 × N:1, N:2 × N:2, ... , N:N × N:N }
@@ -52,9 +69,9 @@ function array_folded_combine($x, $y) {
   }
   else if (is_array($x) && is_array($y) && count($x) != count($y)) {
     // [M] × [N] = Undefined if M != N
-    throw new Exception('Error multiplying arrays: amount of elements in arrays must be equal.');
+    throw new Exception('Error combining arrays: [M] × [N]: amount of elements in arrays must be equal.');
   }
   else {
-    throw new Exception('Error multiplying arrays: unknown error');
+    throw new Exception('Error combining arrays: unknown error');
   }
 }
