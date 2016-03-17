@@ -29,7 +29,7 @@ B: [[1, 'Peter'], [2, 'Max'], [3, 'Anna']]
 `A × B` results to:
 
 ```yaml
-A_B: 
+A_B:
   - {id: 1, name: 'Peter'}
   - {id: 2, name: 'Max'}
   - {id: 3, name: 'Anna'}
